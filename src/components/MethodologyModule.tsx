@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Target, HelpCircle, CheckCircle, Lightbulb, FileText, Send, Save, History, Eye, Download } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Target, HelpCircle, CheckCircle, Lightbulb, FileText, Save, History, Eye, Download } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useProjects } from '../hooks/useProjects';
 import { supabase } from '../lib/supabase';
@@ -20,7 +20,7 @@ interface MethodologyData {
   design_characterization: string;
   design_justification: string;
   data_collection_techniques: string;
-  dimensions_matrix: any;
+  dimensions_matrix: Record<string, unknown>;
   created_at?: string;
   updated_at?: string;
 }
@@ -46,7 +46,6 @@ const MethodologyModule = () => {
   const { user } = useAuth();
   const { currentProject } = useProjects();
   const [activeTab, setActiveTab] = useState('design');
-  const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [methodologyData, setMethodologyData] = useState<MethodologyData>({
@@ -69,18 +68,11 @@ const MethodologyModule = () => {
   const [analysisHistory, setAnalysisHistory] = useState<MethodologyAnalysis[]>([]);
   const [currentAnalysis, setCurrentAnalysis] = useState<MethodologyAnalysis | null>(null);
 
-  useEffect(() => {
-    if (currentProject?.id) {
-      loadMethodologyData();
-      loadAnalysisHistory();
-    }
-  }, [currentProject?.id]);
-
-  const loadMethodologyData = async () => {
+  const loadMethodologyData = useCallback(async () => {
     if (!currentProject?.id) return;
 
     try {
-      const { data, error } = await supabase
+      const { data, error: fetchError } = await supabase
         .from('methodology_data')
         .select('*')
         .eq('project_id', currentProject.id)
@@ -88,31 +80,38 @@ const MethodologyModule = () => {
         .limit(1)
         .single();
 
-      if (data && !error) {
+      if (data && !fetchError) {
         setMethodologyData(data);
       }
-    } catch (error) {
+    } catch {
       console.log('No existing methodology data found');
     }
-  };
+  }, [currentProject?.id]);
 
-  const loadAnalysisHistory = async () => {
+  const loadAnalysisHistory = useCallback(async () => {
     if (!currentProject?.id) return;
 
     try {
-      const { data, error } = await supabase
+      const { data, error: fetchError } = await supabase
         .from('methodology_analyses')
         .select('*')
         .eq('project_id', currentProject.id)
         .order('created_at', { ascending: false });
 
-      if (data && !error) {
+      if (data && !fetchError) {
         setAnalysisHistory(data);
       }
-    } catch (error) {
+    } catch {
       console.log('No analysis history found');
     }
-  };
+  }, [currentProject?.id]);
+
+  useEffect(() => {
+    if (currentProject?.id) {
+      loadMethodologyData();
+      loadAnalysisHistory();
+    }
+  }, [currentProject?.id, loadMethodologyData, loadAnalysisHistory]);
 
   const saveMethodologyData = async () => {
     if (!currentProject?.id || !user?.id) return;

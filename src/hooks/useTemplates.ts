@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -8,8 +8,8 @@ interface Template {
   description: string | null;
   category: string;
   type: 'survey' | 'interview' | 'observation' | 'scale' | 'test';
-  questions: any;
-  metadata: any;
+  questions: Record<string, unknown>;
+  metadata: Record<string, unknown>;
   usage_count: number;
   is_public: boolean;
   created_by: string;
@@ -23,16 +23,7 @@ export const useTemplates = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (user) {
-      fetchTemplates();
-    } else {
-      setTemplates([]);
-      setLoading(false);
-    }
-  }, [user]);
-
-  const fetchTemplates = async () => {
+  const fetchTemplates = useCallback(async () => {
     try {
       setLoading(true);
       // Fetch both public templates and user's own templates
@@ -51,15 +42,24 @@ export const useTemplates = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      fetchTemplates();
+    } else {
+      setTemplates([]);
+      setLoading(false);
+    }
+  }, [user, fetchTemplates]);
 
   const createTemplate = async (templateData: {
     name: string;
     description?: string;
     category: string;
     type: 'survey' | 'interview' | 'observation' | 'scale' | 'test';
-    questions?: any;
-    metadata?: any;
+    questions?: Record<string, unknown>;
+    metadata?: Record<string, unknown>;
     is_public?: boolean;
   }) => {
     if (!user?.id) {

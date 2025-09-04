@@ -22,7 +22,7 @@ interface WorkflowStep {
   aiFunction: string;
   status: 'completed' | 'current' | 'pending';
   estimatedTime: string;
-  icon: React.ComponentType<any>;
+  icon: React.ElementType;
 }
 
 const WorkflowGuide = () => {
@@ -209,7 +209,7 @@ const WorkflowGuide = () => {
 
       {/* Workflow Steps */}
       <div className="space-y-4">
-        {filteredSteps.map((step, index) => {
+        {filteredSteps.map((step) => {
           const Icon = step.icon;
           return (
             <div

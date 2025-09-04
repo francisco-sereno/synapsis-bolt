@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, type Json } from '@supabase/supabase-js'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -28,7 +28,7 @@ export type Database = {
           position: string | null
           role: 'admin' | 'researcher' | 'collaborator'
           avatar_url: string | null
-          preferences: any
+          preferences: Json
           created_at: string
           updated_at: string
         }
@@ -42,7 +42,7 @@ export type Database = {
           orcid?: string | null
           role?: 'admin' | 'researcher' | 'collaborator'
           avatar_url?: string | null
-          preferences?: any
+          preferences?: Json
           created_at?: string
           updated_at?: string
         }
@@ -56,7 +56,7 @@ export type Database = {
           orcid?: string | null
           role?: 'admin' | 'researcher' | 'collaborator'
           avatar_url?: string | null
-          preferences?: any
+          preferences?: Json
           created_at?: string
           updated_at?: string
         }
@@ -75,7 +75,7 @@ export type Database = {
           status: 'planificacion' | 'activo' | 'completado' | 'pausado'
           ethics_approval: string | null
           visibility: 'private' | 'institutional' | 'public'
-          settings: any
+          settings: Json
           created_at: string
           updated_at: string
         }
@@ -92,7 +92,7 @@ export type Database = {
           status?: 'planificacion' | 'activo' | 'completado' | 'pausado'
           ethics_approval?: string | null
           visibility?: 'private' | 'institutional' | 'public'
-          settings?: any
+          settings?: Json
           created_at?: string
           updated_at?: string
         }
@@ -109,7 +109,7 @@ export type Database = {
           status?: 'planificacion' | 'activo' | 'completado' | 'pausado'
           ethics_approval?: string | null
           visibility?: 'private' | 'institutional' | 'public'
-          settings?: any
+          settings?: Json
           created_at?: string
           updated_at?: string
         }
@@ -120,7 +120,7 @@ export type Database = {
           project_id: string
           user_id: string
           role: 'admin' | 'editor' | 'collaborator' | 'viewer'
-          permissions: any
+          permissions: Json
           invited_by: string
           invited_at: string
           joined_at: string | null
@@ -132,7 +132,7 @@ export type Database = {
           project_id: string
           user_id: string
           role?: 'admin' | 'editor' | 'collaborator' | 'viewer'
-          permissions?: any
+          permissions?: Json
           invited_by: string
           invited_at?: string
           joined_at?: string | null
@@ -144,7 +144,7 @@ export type Database = {
           project_id?: string
           user_id?: string
           role?: 'admin' | 'editor' | 'collaborator' | 'viewer'
-          permissions?: any
+          permissions?: Json
           invited_by?: string
           invited_at?: string
           joined_at?: string | null
@@ -159,9 +159,9 @@ export type Database = {
           name: string
           description: string | null
           type: 'survey' | 'interview' | 'observation' | 'scale' | 'test'
-          questions: any
-          validation_data: any
-          metadata: any
+          questions: Json
+          validation_data: Json
+          metadata: Json
           status: 'draft' | 'validated' | 'active' | 'completed' | 'archived'
           created_by: string
           created_at: string
@@ -173,9 +173,9 @@ export type Database = {
           name: string
           description?: string | null
           type: 'survey' | 'interview' | 'observation' | 'scale' | 'test'
-          questions?: any
-          validation_data?: any
-          metadata?: any
+          questions?: Json
+          validation_data?: Json
+          metadata?: Json
           status?: 'draft' | 'validated' | 'active' | 'completed' | 'archived'
           created_by: string
           created_at?: string
@@ -187,9 +187,9 @@ export type Database = {
           name?: string
           description?: string | null
           type?: 'survey' | 'interview' | 'observation' | 'scale' | 'test'
-          questions?: any
-          validation_data?: any
-          metadata?: any
+          questions?: Json
+          validation_data?: Json
+          metadata?: Json
           status?: 'draft' | 'validated' | 'active' | 'completed' | 'archived'
           created_by?: string
           created_at?: string
@@ -206,8 +206,8 @@ export type Database = {
           target_responses: number | null
           responses_count: number
           completion_rate: number
-          settings: any
-          analytics: any
+          settings: Json
+          analytics: Json
           url_slug: string | null
           created_by: string
           created_at: string
@@ -222,8 +222,8 @@ export type Database = {
           target_responses?: number | null
           responses_count?: number
           completion_rate?: number
-          settings?: any
-          analytics?: any
+          settings?: Json
+          analytics?: Json
           url_slug?: string | null
           created_by: string
           created_at?: string
@@ -238,8 +238,8 @@ export type Database = {
           target_responses?: number | null
           responses_count?: number
           completion_rate?: number
-          settings?: any
-          analytics?: any
+          settings?: Json
+          analytics?: Json
           url_slug?: string | null
           created_by?: string
           created_at?: string
@@ -251,8 +251,8 @@ export type Database = {
           id: string
           collection_id: string
           participant_id: string | null
-          answers: any
-          metadata: any
+          answers: Json
+          metadata: Json
           start_time: string
           end_time: string | null
           completion_rate: number
@@ -265,8 +265,8 @@ export type Database = {
           id?: string
           collection_id: string
           participant_id?: string | null
-          answers: any
-          metadata?: any
+          answers: Json
+          metadata?: Json
           start_time?: string
           end_time?: string | null
           completion_rate?: number
@@ -279,8 +279,8 @@ export type Database = {
           id?: string
           collection_id?: string
           participant_id?: string | null
-          answers?: any
-          metadata?: any
+          answers?: Json
+          metadata?: Json
           start_time?: string
           end_time?: string | null
           completion_rate?: number
@@ -297,8 +297,8 @@ export type Database = {
           name: string
           type: string
           dataset_id: string | null
-          parameters: any
-          results: any
+          parameters: Json
+          results: Json
           interpretation: string | null
           status: 'running' | 'completed' | 'failed'
           rating: number | null
@@ -313,8 +313,8 @@ export type Database = {
           name: string
           type: string
           dataset_id?: string | null
-          parameters?: any
-          results?: any
+          parameters?: Json
+          results?: Json
           interpretation?: string | null
           status?: 'running' | 'completed' | 'failed'
           rating?: number | null
@@ -329,8 +329,8 @@ export type Database = {
           name?: string
           type?: string
           dataset_id?: string | null
-          parameters?: any
-          results?: any
+          parameters?: Json
+          results?: Json
           interpretation?: string | null
           status?: 'running' | 'completed' | 'failed'
           rating?: number | null
@@ -354,7 +354,7 @@ export type Database = {
           tags: string[] | null
           transcription: string | null
           extracted_text: string | null
-          metadata: any
+          metadata: Json
           shared: boolean
           uploaded_by: string
           created_at: string
@@ -372,7 +372,7 @@ export type Database = {
           tags?: string[] | null
           transcription?: string | null
           extracted_text?: string | null
-          metadata?: any
+          metadata?: Json
           shared?: boolean
           uploaded_by: string
           created_at?: string
@@ -390,7 +390,7 @@ export type Database = {
           tags?: string[] | null
           transcription?: string | null
           extracted_text?: string | null
-          metadata?: any
+          metadata?: Json
           shared?: boolean
           uploaded_by?: string
           created_at?: string
@@ -402,10 +402,10 @@ export type Database = {
           project_id: string
           name: string
           method: string
-          sources: any
-          results: any
-          convergences: any
-          divergences: any
+          sources: Json
+          results: Json
+          convergences: Json
+          divergences: Json
           meta_inferences: string[] | null
           confidence_score: number | null
           created_by: string
@@ -417,10 +417,10 @@ export type Database = {
           project_id: string
           name: string
           method: string
-          sources?: any
-          results?: any
-          convergences?: any
-          divergences?: any
+          sources?: Json
+          results?: Json
+          convergences?: Json
+          divergences?: Json
           meta_inferences?: string[] | null
           confidence_score?: number | null
           created_by: string
@@ -432,10 +432,10 @@ export type Database = {
           project_id?: string
           name?: string
           method?: string
-          sources?: any
-          results?: any
-          convergences?: any
-          divergences?: any
+          sources?: Json
+          results?: Json
+          convergences?: Json
+          divergences?: Json
           meta_inferences?: string[] | null
           confidence_score?: number | null
           created_by?: string
@@ -450,9 +450,9 @@ export type Database = {
           title: string
           type: string
           template: string
-          content: any
-          sections: any
-          metadata: any
+          content: Json
+          sections: Json
+          metadata: Json
           status: 'draft' | 'review' | 'published'
           download_count: number
           view_count: number
@@ -466,9 +466,9 @@ export type Database = {
           title: string
           type: string
           template: string
-          content?: any
-          sections?: any
-          metadata?: any
+          content?: Json
+          sections?: Json
+          metadata?: Json
           status?: 'draft' | 'review' | 'published'
           download_count?: number
           view_count?: number
@@ -482,9 +482,9 @@ export type Database = {
           title?: string
           type?: string
           template?: string
-          content?: any
-          sections?: any
-          metadata?: any
+          content?: Json
+          sections?: Json
+          metadata?: Json
           status?: 'draft' | 'review' | 'published'
           download_count?: number
           view_count?: number
@@ -500,7 +500,7 @@ export type Database = {
           type: string
           title: string
           message: string
-          data: any
+          data: Json
           read: boolean
           action_url: string | null
           action_label: string | null
@@ -512,7 +512,7 @@ export type Database = {
           type: string
           title: string
           message: string
-          data?: any
+          data?: Json
           read?: boolean
           action_url?: string | null
           action_label?: string | null
@@ -524,7 +524,7 @@ export type Database = {
           type?: string
           title?: string
           message?: string
-          data?: any
+          data?: Json
           read?: boolean
           action_url?: string | null
           action_label?: string | null
@@ -537,8 +537,8 @@ export type Database = {
           user_id: string
           project_id: string
           type: string
-          input_data: any
-          output_data: any | null
+          input_data: Json
+          output_data: Json | null
           processing_time: number | null
           tokens_used: number | null
           cost: number | null
@@ -552,8 +552,8 @@ export type Database = {
           user_id: string
           project_id: string
           type: string
-          input_data: any
-          output_data?: any | null
+          input_data: Json
+          output_data?: Json | null
           processing_time?: number | null
           tokens_used?: number | null
           cost?: number | null
@@ -567,8 +567,8 @@ export type Database = {
           user_id?: string
           project_id?: string
           type?: string
-          input_data?: any
-          output_data?: any | null
+          input_data?: Json
+          output_data?: Json | null
           processing_time?: number | null
           tokens_used?: number | null
           cost?: number | null
@@ -587,7 +587,7 @@ export type Database = {
           target_type: string | null
           target_id: string | null
           target_name: string | null
-          details: any
+          details: Json
           created_at: string
         }
         Insert: {
@@ -598,7 +598,7 @@ export type Database = {
           target_type?: string | null
           target_id?: string | null
           target_name?: string | null
-          details?: any
+          details?: Json
           created_at?: string
         }
         Update: {
@@ -609,7 +609,7 @@ export type Database = {
           target_type?: string | null
           target_id?: string | null
           target_name?: string | null
-          details?: any
+          details?: Json
           created_at?: string
         }
       }
@@ -619,7 +619,7 @@ export type Database = {
           user_id: string
           project_id: string
           query: string
-          filters: any
+          filters: Json
           results_count: number
           created_at: string
         }
@@ -628,7 +628,7 @@ export type Database = {
           user_id: string
           project_id: string
           query: string
-          filters?: any
+          filters?: Json
           results_count?: number
           created_at?: string
         }
@@ -637,7 +637,7 @@ export type Database = {
           user_id?: string
           project_id?: string
           query?: string
-          filters?: any
+          filters?: Json
           results_count?: number
           created_at?: string
         }
@@ -709,7 +709,7 @@ export type Database = {
           design_characterization: string
           design_justification: string
           data_collection_techniques: string
-          dimensions_matrix: any
+          dimensions_matrix: Json
           created_at: string
           updated_at: string
         }
@@ -729,7 +729,7 @@ export type Database = {
           design_characterization?: string
           design_justification?: string
           data_collection_techniques?: string
-          dimensions_matrix?: any
+          dimensions_matrix?: Json
           created_at?: string
           updated_at?: string
         }
@@ -749,7 +749,7 @@ export type Database = {
           design_characterization?: string
           design_justification?: string
           data_collection_techniques?: string
-          dimensions_matrix?: any
+          dimensions_matrix?: Json
           created_at?: string
           updated_at?: string
         }
@@ -763,7 +763,7 @@ export type Database = {
           strengths: string[]
           weaknesses: string[]
           recommendations: string[]
-          alignment_scores: any
+          alignment_scores: Json
           created_by: string
           created_at: string
         }
@@ -775,7 +775,7 @@ export type Database = {
           strengths?: string[]
           weaknesses?: string[]
           recommendations?: string[]
-          alignment_scores?: any
+          alignment_scores?: Json
           created_by: string
           created_at?: string
         }
@@ -787,7 +787,7 @@ export type Database = {
           strengths?: string[]
           weaknesses?: string[]
           recommendations?: string[]
-          alignment_scores?: any
+          alignment_scores?: Json
           created_by?: string
           created_at?: string
         }
@@ -799,8 +799,8 @@ export type Database = {
           description: string | null
           category: string
           type: 'survey' | 'interview' | 'observation' | 'scale' | 'test'
-          questions: any
-          metadata: any
+          questions: Json
+          metadata: Json
           usage_count: number
           is_public: boolean
           created_by: string
@@ -813,8 +813,8 @@ export type Database = {
           description?: string | null
           category: string
           type: 'survey' | 'interview' | 'observation' | 'scale' | 'test'
-          questions?: any
-          metadata?: any
+          questions?: Json
+          metadata?: Json
           usage_count?: number
           is_public?: boolean
           created_by: string
@@ -827,8 +827,8 @@ export type Database = {
           description?: string | null
           category?: string
           type?: 'survey' | 'interview' | 'observation' | 'scale' | 'test'
-          questions?: any
-          metadata?: any
+          questions?: Json
+          metadata?: Json
           usage_count?: number
           is_public?: boolean
           created_by?: string

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Bot, Send, Upload, FileText, BarChart3, MessageSquare, Lightbulb, Download } from 'lucide-react';
-import { useAI } from '../hooks/useAI';
+import { Bot, Send, Upload, FileText, BarChart3, Lightbulb } from 'lucide-react';
 
 interface Message {
   id: string;

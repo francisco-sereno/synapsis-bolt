@@ -10,7 +10,7 @@ import { ClipboardList, Plus, Eye, Edit, BarChart3, Settings, FileText, Wand2, C
 const InstrumentsModule = () => {
   const { currentProject } = useProjects();
   const { instruments, loading, createInstrument } = useInstruments(currentProject?.id);
-  const { templates: dbTemplates, loading: templatesLoading, useTemplate } = useTemplates();
+  const { templates: dbTemplates, loading: templatesLoading, useTemplate: applyTemplate } = useTemplates();
   const { generateInstrumentFromDocument, generateInstrumentFromCode, loading: aiLoading } = useAI();
   const [activeTab, setActiveTab] = useState('list');
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -32,8 +32,8 @@ const InstrumentsModule = () => {
     { id: 'prevalidation', label: 'Prevalidación Experta', icon: Shield }
   ];
 
-  const handleUseTemplate = async (template: any) => {
-    const { error } = await useTemplate(template.id);
+  const handleUseTemplate = async (template: { id: string; name: string; }) => {
+    const { error } = await applyTemplate(template.id);
     if (!error) {
       // Here you would typically create a new instrument based on the template
       console.log('Using template:', template.name);
@@ -161,8 +161,10 @@ const InstrumentsModule = () => {
                     <option value="qualitative">Cualitativo</option>
                   </select>
                 </div>
+                <button
                   onClick={() => setShowCreateModal(true)}
-                <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2">
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
+                >
                   <Plus className="w-4 h-4" />
                   <span>Nuevo instrumento</span>
                 </button>
@@ -360,8 +362,10 @@ const InstrumentsModule = () => {
                       <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">
                         Vista Previa
                       </button>
-                      <button className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors">
+                      <button
                         onClick={() => handleUseTemplate(template)}
+                        className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors"
+                      >
                         Usar Plantilla
                       </button>
                     </div>
@@ -483,7 +487,7 @@ const InstrumentsModule = () => {
                   </label>
                   <select 
                     value={newInstrumentData.type}
-                    onChange={(e) => setNewInstrumentData(prev => ({ ...prev, type: e.target.value as any }))}
+                    onChange={(e) => setNewInstrumentData(prev => ({ ...prev, type: e.target.value as 'survey' | 'interview' | 'observation' | 'scale' | 'test' }))}
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
                     <option value="survey">Encuesta Cuantitativa</option>

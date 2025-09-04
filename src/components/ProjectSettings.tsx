@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings, Edit, Trash2, Users, Calendar, Globe, Lock, AlertTriangle, Save, Copy, Download } from 'lucide-react';
+import { Settings, Trash2, Users, Lock, AlertTriangle, Save, Copy, Download } from 'lucide-react';
 
 const ProjectSettings = () => {
   const [activeTab, setActiveTab] = useState('general');
@@ -212,6 +212,7 @@ const ProjectSettings = () => {
                 <button
                   onClick={handleSave}
                   disabled={saving}
+                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center space-x-2"
                 >
                     <Save className="w-4 h-4" />
                   <span>Guardar Cambios</span>

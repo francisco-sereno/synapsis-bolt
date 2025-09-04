@@ -7,11 +7,13 @@ const CollaborationModule = () => {
   const { currentProject } = useProjects();
   const { collaborators, loading, inviteCollaborator, removeCollaborator } = useCollaborators(currentProject?.id);
   
+  type CollaboratorRole = 'viewer' | 'collaborator' | 'editor' | 'admin';
+
   const [activeTab, setActiveTab] = useState('team');
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [inviteLoading, setInviteLoading] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
-  const [inviteRole, setInviteRole] = useState('collaborator');
+  const [inviteRole, setInviteRole] = useState<CollaboratorRole>('collaborator');
 
   // Transform collaborators data for display
   const teamMembers = collaborators.map(collab => ({
@@ -77,7 +79,7 @@ const CollaborationModule = () => {
     { id: 'activity', label: 'Actividad', icon: Clock }
   ];
 
-  const getRoleInfo = (role) => {
+  const getRoleInfo = (role: CollaboratorRole) => {
     switch (role) {
       case 'admin':
         return { label: 'Administrador', color: 'red', icon: Crown };
@@ -97,7 +99,7 @@ const CollaborationModule = () => {
     
     setInviteLoading(true);
     try {
-      const { error } = await inviteCollaborator(inviteEmail, inviteRole as any);
+      const { error } = await inviteCollaborator(inviteEmail, inviteRole);
       if (error) {
         alert('Error al invitar colaborador: ' + error.message);
       } else {

@@ -83,18 +83,6 @@ const InstrumentBuilder = () => {
     }
   };
 
-  const moveQuestion = (id: string, direction: 'up' | 'down') => {
-    const index = questions.findIndex(q => q.id === id);
-    if (index === -1) return;
-    
-    const newIndex = direction === 'up' ? index - 1 : index + 1;
-    if (newIndex < 0 || newIndex >= questions.length) return;
-    
-    const newQuestions = [...questions];
-    [newQuestions[index], newQuestions[newIndex]] = [newQuestions[newIndex], newQuestions[index]];
-    setQuestions(newQuestions);
-  };
-
   const renderQuestionEditor = (question: Question) => {
     return (
       <div className="space-y-4">
@@ -601,7 +589,7 @@ const InstrumentBuilder = () => {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {questions.map((question, index) => (
+                  {questions.map((question) => (
                     <div key={question.id}>
                       {renderQuestionPreview(question)}
                     </div>

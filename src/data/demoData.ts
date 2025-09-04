@@ -1,3 +1,5 @@
+import { ResearchProject, Task, Collaborator } from '../types/research';
+
 // Demo data for when Supabase is not configured
 export const demoUser = {
   id: 'demo-user',
@@ -8,8 +10,8 @@ export const demoUser = {
   updated_at: new Date().toISOString()
 };
 
-export const demoProjects: any[] = [];
+export const demoProjects: ResearchProject[] = [];
 
-export const demoTasks: any[] = [];
+export const demoTasks: Task[] = [];
 
-export const demoCollaborators: any[] = [];
+export const demoCollaborators: Collaborator[] = [];

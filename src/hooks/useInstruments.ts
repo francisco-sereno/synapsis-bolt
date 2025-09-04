@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -8,9 +8,9 @@ interface Instrument {
   name: string;
   description: string | null;
   type: 'survey' | 'interview' | 'observation' | 'scale' | 'test';
-  questions: any;
-  validation_data: any;
-  metadata: any;
+  questions: Record<string, unknown>;
+  validation_data: Record<string, unknown>;
+  metadata: Record<string, unknown>;
   status: 'draft' | 'validated' | 'active' | 'completed' | 'archived';
   created_by: string;
   created_at: string;
@@ -23,16 +23,7 @@ export const useInstruments = (projectId?: string) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (projectId && user) {
-      fetchInstruments();
-    } else {
-      setInstruments([]);
-      setLoading(false);
-    }
-  }, [projectId, user]);
-
-  const fetchInstruments = async () => {
+  const fetchInstruments = useCallback(async () => {
     if (!projectId) return;
 
     try {
@@ -52,14 +43,23 @@ export const useInstruments = (projectId?: string) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [projectId]);
+
+  useEffect(() => {
+    if (projectId && user) {
+      fetchInstruments();
+    } else {
+      setInstruments([]);
+      setLoading(false);
+    }
+  }, [projectId, user, fetchInstruments]);
 
   const createInstrument = async (instrumentData: {
     name: string;
     description?: string;
     type: 'survey' | 'interview' | 'observation' | 'scale' | 'test';
-    questions?: any;
-    metadata?: any;
+    questions?: Record<string, unknown>;
+    metadata?: Record<string, unknown>;
   }) => {
     if (!projectId || !user?.id) {
       return { data: null, error: new Error('Missing project or user') };

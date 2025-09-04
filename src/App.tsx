@@ -26,7 +26,6 @@ import EnhancedDataVisualization from './components/EnhancedDataVisualization';
 import SmartRecommendations from './components/SmartRecommendations';
 import WorkflowGuide from './components/WorkflowGuide';
 import ProjectList from './components/ProjectList';
-import InstrumentPrevalidation from './components/InstrumentPrevalidation';
 import AdminPanel from './components/AdminPanel';
 import DocumentSummarizer from './components/DocumentSummarizer';
 import ConversationalAssistant from './components/ConversationalAssistant';

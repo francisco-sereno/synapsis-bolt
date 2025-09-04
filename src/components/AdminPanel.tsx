@@ -6,8 +6,6 @@ import {
   FolderOpen, 
   Settings, 
   Bot,
-  Key,
-  Palette,
   Database,
   Plus,
   Edit,
@@ -19,7 +17,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTemplates } from '../hooks/useTemplates';
 
 const AdminPanel = () => {
-  const { profile, isAdmin } = useAuth();
+  const { isAdmin } = useAuth();
   const { templates: dbTemplates, loading: templatesLoading } = useTemplates();
   const [activeTab, setActiveTab] = useState('users');
 

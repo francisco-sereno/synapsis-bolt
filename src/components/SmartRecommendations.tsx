@@ -198,7 +198,7 @@ const SmartRecommendations = () => {
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setFilter(tab.id as any)}
+                onClick={() => setFilter(tab.id as 'all' | 'high' | 'medium' | 'low')}
                 className={`flex items-center py-4 px-1 border-b-2 font-medium text-sm ${
                   filter === tab.id
                     ? 'border-blue-500 text-blue-600'

@@ -18,11 +18,7 @@ export class PrevalidationService {
   /**
    * Cognitive Interview Simulation (Think Aloud Protocol)
    */
-  async cognitiveInterviewSimulation(params: {
-    instrument: string;
-    targetPopulation: string;
-    objective: string;
-  }): Promise<{
+  async cognitiveInterviewSimulation(): Promise<{
     responses: Array<{
       questionNumber: number;
       interpretation: string;
@@ -37,20 +33,6 @@ export class PrevalidationService {
       recommendations: string[];
     };
   }> {
-    const prompt = `Actúa como un participante que pertenece a la siguiente población objetivo: ${params.targetPopulation}. El objetivo de la encuesta es: ${params.objective}.
-
-Voy a proporcionarte un cuestionario. Por favor, realiza un ejercicio de "Entrevista Cognitiva" simulada, siguiendo el protocolo "Think Aloud" (Pensar en Voz Alta). Para cada pregunta, sigue estos 4 pasos:
-
-1. Interpretación: Explica con tus propias palabras qué entiendes que te está preguntando el ítem.
-2. Proceso de Recuperación: Describe qué información buscas en tu memoria o cómo procesas la pregunta para formular una respuesta.
-3. Juicio y Respuesta: Indica qué opción elegirías y por qué. ¿Las opciones disponibles reflejan adecuadamente tu experiencia o perspectiva?
-4. Identificación de Dificultades: Señala cualquier término confuso, instrucción poco clara, lenguaje incómodo, o si te sientes incapaz de responder.
-
-Finalmente, comenta sobre la experiencia general (longitud, flujo, interés).
-
-Aquí está el instrumento:
-${params.instrument}`;
-
     // Simulate AI processing
     await this.delay(3000);
 
@@ -80,11 +62,7 @@ ${params.instrument}`;
   /**
    * Technical Methodological Review and Psychometrics
    */
-  async technicalMethodologicalReview(params: {
-    instrument: string;
-    objective: string;
-    targetPopulation: string;
-  }): Promise<{
+  async technicalMethodologicalReview(): Promise<{
     generalStrengths: string[];
     detailedReview: Array<{
       itemNumber: number;
@@ -95,25 +73,6 @@ ${params.instrument}`;
     finalRecommendations: string[];
     overallScore: number;
   }> {
-    const prompt = `Actúa como un experto en diseño de encuestas y psicometría. Revisa el siguiente instrumento cuantitativo diseñado para ${params.objective} dirigido a ${params.targetPopulation}.
-
-Realiza una revisión metodológica exhaustiva, enfocándote en los siguientes criterios técnicos:
-
-1. Claridad y Precisión: Evalúa si los ítems son concisos y libres de ambigüedad.
-
-2. Identificación de Errores Técnicos y Sesgos:
-   - Preguntas Dobles (Double-barreled): ¿Hay preguntas que combinen dos ideas distintas?
-   - Preguntas Dirigidas (Leading questions): ¿Hay preguntas que sugieran una respuesta deseada?
-   - Redacción en Negativo: ¿Se abusa de términos negativos que complican la comprensión?
-   - Deseabilidad Social: ¿Hay ítems sensibles que probablemente generen respuestas socialmente aceptables?
-
-3. Escalas de Respuesta: ¿Son apropiadas las escalas? ¿Son las opciones mutuamente excluyentes y exhaustivas?
-
-4. Estructura y Flujo: Evalúa la organización lógica y la claridad de las instrucciones.
-
-Aquí está el instrumento:
-${params.instrument}`;
-
     await this.delay(4000);
 
     return {
@@ -152,11 +111,7 @@ ${params.instrument}`;
   /**
    * Depth, Fluency and Openness Analysis
    */
-  async depthFluencyAnalysis(params: {
-    interviewGuide: string;
-    phenomenon: string;
-    targetPopulation: string;
-  }): Promise<{
+  async depthFluencyAnalysis(): Promise<{
     depthPotential: {
       score: number;
       analysis: string;
@@ -180,21 +135,6 @@ ${params.instrument}`;
       suggestedProbes: string[];
     };
   }> {
-    const prompt = `Actúa como un experto en metodología cualitativa. Analiza la siguiente guía de entrevista semiestructurada diseñada para explorar ${params.phenomenon} con ${params.targetPopulation}.
-
-Evalúa la guía basándote en los siguientes criterios:
-
-1. Potencial de Profundidad (Elicitación): ¿Las preguntas principales y las sondas (probes) permiten elicitar narrativas ricas y detalladas?
-
-2. Apertura y Neutralidad: Revisa si las preguntas son genuinamente abiertas (preguntas tipo "Cómo", "De qué manera"). Identifica y reformula preguntas cerradas (Sí/No) o que dirijan la respuesta.
-
-3. Fluidez y Transiciones: Analiza el flujo lógico entre los bloques temáticos. ¿Las transiciones son naturales? ¿La estructura permite flexibilidad?
-
-4. Calidad de las Sondas (Probes): ¿Se incluyen suficientes preguntas de seguimiento (ej. "¿Podrías darme un ejemplo?") para profundizar? Sugiere nuevas sondas y reformula preguntas para fomentar mayor profundidad.
-
-Aquí está la guía de entrevista:
-${params.interviewGuide}`;
-
     await this.delay(3500);
 
     return {
@@ -248,10 +188,7 @@ ${params.interviewGuide}`;
   /**
    * Reflexivity and Researcher Bias Review
    */
-  async reflexivityBiasReview(params: {
-    interviewGuide: string;
-    researchObjective: string;
-  }): Promise<{
+  async reflexivityBiasReview(): Promise<{
     identifiedAssumptions: string[];
     loadedQuestions: Array<{
       original: string;
@@ -265,21 +202,6 @@ ${params.interviewGuide}`;
     }>;
     neutralityRecommendations: string[];
   }> {
-    const prompt = `Actúa como un supervisor de investigación cualitativa enfocado en el rigor metodológico y la reflexividad. Revisa la siguiente guía de entrevista diseñada para estudiar ${params.researchObjective}.
-
-Realiza un análisis crítico enfocado en identificar sesgos potenciales y supuestos implícitos:
-
-1. Identificación de Supuestos: ¿Qué preconcepciones o teorías del investigador parecen estar integradas en la redacción de las preguntas?
-
-2. Preguntas Cargadas o con Juicios de Valor: Identifica cualquier pregunta que contenga juicios de valor o que guíe al participante hacia una interpretación específica.
-
-3. Encuadre (Framing): ¿El encuadre de los temas limita la posibilidad de que emerjan perspectivas inesperadas, contradictorias o alternativas?
-
-Recomienda ajustes específicos para reformular las preguntas de manera más neutral y abierta, maximizando la voz del participante y la descripción densa.
-
-Aquí está la guía de entrevista:
-${params.interviewGuide}`;
-
     await this.delay(3000);
 
     return {
@@ -324,10 +246,7 @@ ${params.interviewGuide}`;
   /**
    * Field Pilot Simulation and Methodological Reflection
    */
-  async fieldPilotSimulation(params: {
-    interviewGuide: string;
-    studyContext: string;
-  }): Promise<{
+  async fieldPilotSimulation(): Promise<{
     dynamicsAndRapport: {
       score: number;
       feedback: string;
@@ -350,25 +269,6 @@ ${params.interviewGuide}`;
     };
     emergentThemes: string[];
   }> {
-    const prompt = `Actúa como un investigador de campo que acaba de realizar una prueba piloto utilizando el instrumento proporcionado.
-
-El contexto del estudio es: ${params.studyContext}.
-
-Elabora una reflexión metodológica sobre la usabilidad del instrumento en campo, basada en la simulación de la aplicación. Considera los siguientes puntos:
-
-1. Dinámica y Rapport: ¿Las preguntas iniciales facilitaron un clima de confianza? ¿La conversación fluyó naturalmente?
-
-2. Calidad de la Información Generada: ¿Qué preguntas produjeron las respuestas más ricas y cuáles generaron información superficial?
-
-3. Gestión del Tiempo: ¿Es realista aplicar el instrumento en el tiempo estimado?
-
-4. Dificultades Anticipadas y Ajustes Prácticos: ¿Qué desafíos logísticos o emocionales podrían surgir y cómo debería ajustarse el protocolo?
-
-5. Temas Emergentes: ¿Surgieron temas relevantes no contemplados en la guía que deberían incluirse?
-
-Aquí está la guía de entrevista:
-${params.interviewGuide}`;
-
     await this.delay(3500);
 
     return {
@@ -433,11 +333,7 @@ ${params.interviewGuide}`;
   /**
    * Multidisciplinary Expert Panel Simulation
    */
-  async expertPanelSimulation(params: {
-    instrument: string;
-    objective: string;
-    targetPopulation: string;
-  }): Promise<{
+  async expertPanelSimulation(): Promise<{
     judge1_thematic: {
       generalComments: string;
       sufficiency: string;
@@ -476,21 +372,6 @@ ${params.interviewGuide}`;
       cviScore: number;
     };
   }> {
-    const prompt = `Actúa como un coordinador de un panel de juicio de expertos para la validación de un instrumento de investigación. El objetivo del instrumento es ${params.objective} y la población objetivo es ${params.targetPopulation}.
-
-Simula la evaluación de tres jueces expertos con perfiles distintos sobre el instrumento proporcionado.
-
-Criterios de Evaluación (Estándar): Relevancia, Claridad, Coherencia y Suficiencia.
-
-Perfiles de los Jueces a Simular:
-
-Juez 1: Experto Temático/Disciplinar. Se enfoca en Relevancia, Coherencia y Suficiencia.
-Juez 2: Experto Metodológico. Se enfoca en Claridad, Coherencia y corrección técnica.
-Juez 3: Experto Contextual/Poblacional. Se enfoca en Claridad (lenguaje apropiado) y Relevancia práctica.
-
-Aquí está el instrumento:
-${params.instrument}`;
-
     await this.delay(5000);
 
     return {

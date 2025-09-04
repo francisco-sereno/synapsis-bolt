@@ -14,10 +14,10 @@ interface Project {
   status: 'planificacion' | 'activo' | 'completado' | 'pausado';
   ethics_approval: string | null;
   visibility: 'private' | 'institutional' | 'public';
-  settings: any;
+  settings: Record<string, unknown>;
   created_at: string;
   updated_at: string;
-  project_collaborators?: any[];
+  project_collaborators?: { id: string }[];
 }
 
 interface ProjectCardProps {

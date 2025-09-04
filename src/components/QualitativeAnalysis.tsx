@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { 
   FileText, 
   Brain, 
-  Search, 
   Tag, 
   TrendingUp, 
   MessageSquare, 
@@ -10,9 +9,7 @@ import {
   Download,
   Play,
   Pause,
-  RotateCcw,
   CheckCircle,
-  AlertCircle,
   Lightbulb,
   Network,
   Filter
@@ -39,18 +36,10 @@ interface Theme {
   quotes: string[];
 }
 
-interface AnalysisResult {
-  themes: Theme[];
-  patterns: string[];
-  insights: string[];
-  recommendations: string[];
-}
-
 export default function QualitativeAnalysis() {
   const [activeTab, setActiveTab] = useState<'data' | 'coding' | 'themes' | 'analysis' | 'visualization'>('data');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisProgress, setAnalysisProgress] = useState(0);
-  const [selectedData, setSelectedData] = useState<string[]>([]);
   const [codingMode, setCodingMode] = useState<'manual' | 'ai-assisted' | 'automatic'>('ai-assisted');
 
   const mockData: QualitativeData[] = [
@@ -188,7 +177,7 @@ export default function QualitativeAnalysis() {
         <div className="flex gap-2">
           <select 
             value={codingMode} 
-            onChange={(e) => setCodingMode(e.target.value as any)}
+            onChange={(e) => setCodingMode(e.target.value as 'manual' | 'ai-assisted' | 'automatic')}
             className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="manual">Codificación Manual</option>
@@ -507,7 +496,7 @@ export default function QualitativeAnalysis() {
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => setActiveTab(tab.id as 'data' | 'coding' | 'themes' | 'analysis' | 'visualization')}
                 className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === tab.id
                     ? 'border-purple-500 text-purple-600'

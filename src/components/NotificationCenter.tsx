@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Bell, CheckCircle, AlertCircle, Info, Clock, X, BookMarked as MarkAsRead } from 'lucide-react';
+import { Bell, CheckCircle, AlertCircle, Info, X } from 'lucide-react';
 
 interface Notification {
   id: string;
@@ -144,7 +144,7 @@ const NotificationCenter = () => {
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setFilter(tab.id as any)}
+                onClick={() => setFilter(tab.id as 'all' | 'unread' | 'success' | 'warning' | 'info' | 'error')}
                 className={`flex items-center py-4 px-1 border-b-2 font-medium text-sm ${
                   filter === tab.id
                     ? 'border-blue-500 text-blue-600'

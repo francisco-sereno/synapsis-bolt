@@ -20,23 +20,23 @@ interface Question {
   };
 }
 
+type ResponseValue = string | number | string[];
+
 interface SurveyRendererProps {
-  instrumentId: string;
   title: string;
   description?: string;
   questions: Question[];
-  onSubmit: (responses: Record<string, any>) => void;
+  onSubmit: (responses: Record<string, ResponseValue>) => void;
 }
 
 const SurveyRenderer: React.FC<SurveyRendererProps> = ({
-  instrumentId,
   title,
   description,
   questions,
   onSubmit
 }) => {
   const [currentPage, setCurrentPage] = useState(0);
-  const [responses, setResponses] = useState<Record<string, any>>({});
+  const [responses, setResponses] = useState<Record<string, ResponseValue>>({});
   const [startTime] = useState(new Date());
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -47,7 +47,7 @@ const SurveyRenderer: React.FC<SurveyRendererProps> = ({
     (currentPage + 1) * questionsPerPage
   );
 
-  const updateResponse = (questionId: string, value: any) => {
+  const updateResponse = (questionId: string, value: ResponseValue) => {
     setResponses(prev => ({
       ...prev,
       [questionId]: value
@@ -285,7 +285,6 @@ const SurveyRenderer: React.FC<SurveyRendererProps> = ({
     );
   };
 
-  const progress = ((currentPage + 1) / totalPages) * 100;
   const answeredQuestions = Object.keys(responses).length;
   const totalQuestions = questions.length;
 

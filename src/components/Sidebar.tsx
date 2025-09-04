@@ -25,12 +25,12 @@ import {
   LogOut,
 } from 'lucide-react';
 
-import { Route } from 'lucide-react';
 import { useProjects } from '../hooks/useProjects';
 import { useAuth } from '../contexts/AuthContext';
 
 type ActiveModule = 
   | 'dashboard' 
+  | 'projects'
   | 'methodology' 
   | 'sample' 
   | 'instruments' 
@@ -38,7 +38,8 @@ type ActiveModule =
   | 'data' 
   | 'quantitative' 
   | 'qualitative' 
-  | 'ai-assistant' 
+  | 'ai-assistant'
+  | 'summarizer'
   | 'files' 
   | 'triangulation' 
   | 'peer-review' 
@@ -51,7 +52,8 @@ type ActiveModule =
   | 'notifications'
   | 'visualization'
   | 'recommendations'
-  | 'workflow';
+  | 'workflow'
+  | 'admin';
 
 interface SidebarProps {
   activeModule: ActiveModule;
@@ -61,7 +63,7 @@ interface SidebarProps {
 const menuItems = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { id: 'projects', label: 'Mis proyectos', icon: Target },
-  { id: 'methodology', label: 'Metodología', icon: Target },
+  { id: 'methodology', label: 'Metodología', icon: Lightbulb },
   { id: 'sample', label: 'Definición de muestra', icon: Users },
   { id: 'instruments', label: 'Instrumentos', icon: ClipboardList },
   { id: 'data-collection', label: 'Recolección de datos', icon: Database },

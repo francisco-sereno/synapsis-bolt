@@ -1,5 +1,13 @@
 // Research workflow types and interfaces
 
+type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json }
+  | Json[];
+
 export interface ResearchProject {
   id: string;
   title: string;
@@ -164,7 +172,7 @@ export interface DemographicData {
   ageRange: { min: number; max: number };
   genderDistribution: { [key: string]: number };
   educationLevel: { [key: string]: number };
-  other: { [key: string]: any };
+  other: { [key: string]: Json };
 }
 
 // Instrument types
@@ -274,7 +282,7 @@ export interface DataCollection {
 export interface Response {
   id: string;
   participantId: string;
-  answers: { [questionId: string]: any };
+  answers: { [questionId: string]: Json };
   metadata: ResponseMetadata;
 }
 
@@ -310,7 +318,7 @@ export interface AnalysisResult {
   type: AnalysisType;
   datasetId: string;
   parameters: AnalysisParameters;
-  results: any;
+  results: Json;
   interpretation: string;
   createdAt: Date;
   createdBy: string;
@@ -331,7 +339,7 @@ export interface AnalysisParameters {
   variables: string[];
   method?: string;
   significance?: number;
-  options?: { [key: string]: any };
+  options?: { [key: string]: Json };
 }
 
 // Triangulation types
@@ -345,7 +353,7 @@ export interface DataSource {
   id: string;
   name: string;
   type: 'quantitative' | 'qualitative' | 'mixed';
-  data: any;
+  data: Json;
   quality: number;
   weight: number;
 }
@@ -423,8 +431,8 @@ export interface ReportMetadata {
 export interface AIRequest {
   id: string;
   type: AIRequestType;
-  input: any;
-  context?: any;
+  input: Json;
+  context?: Json;
   userId: string;
   timestamp: Date;
 }
@@ -441,7 +449,7 @@ export type AIRequestType =
 export interface AIResponse {
   id: string;
   requestId: string;
-  result: any;
+  result: Json;
   confidence: number;
   processingTime: number;
   timestamp: Date;
@@ -501,7 +509,7 @@ export interface SearchResult {
   module: string;
   content: string;
   relevance: number;
-  metadata: any;
+  metadata: Json;
 }
 
 // Recommendation types
@@ -524,3 +532,35 @@ export type RecommendationType =
   | 'warning'
   | 'opportunity'
   | 'insight';
+
+export interface Task {
+  id: string;
+  title: string;
+  completed: boolean;
+}
+
+export interface AnalysisResultToSummarize {
+  type: string;
+  results: unknown;
+  significance: number;
+}
+
+export interface InstrumentToTriangulate {
+  name: string;
+  type: 'quantitative' | 'qualitative';
+  results: unknown;
+  construct: string;
+}
+
+export interface SourceToTriangulate {
+  name: string;
+  type: 'primary' | 'secondary';
+  data: unknown;
+  credibility: number;
+}
+
+export interface ReportSectionData {
+  name: string;
+  content: unknown;
+  type: 'analysis' | 'findings' | 'methodology' | 'conclusions';
+}

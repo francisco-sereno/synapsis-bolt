@@ -13,19 +13,31 @@ interface Project {
   status: 'planificacion' | 'activo' | 'completado' | 'pausado';
   ethics_approval: string | null;
   visibility: 'private' | 'institutional' | 'public';
-  settings: any;
+  settings: Record<string, unknown>;
   created_at: string;
   updated_at: string;
 }
 
+interface ProjectFormData {
+  name: string;
+  description: string;
+  methodology: string;
+  design: string;
+  status: 'planificacion' | 'activo' | 'completado' | 'pausado';
+  institution: string;
+  start_date: string;
+  end_date: string;
+  ethics_approval: string;
+}
+
 interface ProjectFormProps {
   project?: Project | null;
-  onSubmit: (data: any) => void;
+  onSubmit: (data: ProjectFormData) => void;
   onCancel: () => void;
 }
 
 const ProjectForm: React.FC<ProjectFormProps> = ({ project, onSubmit, onCancel }) => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ProjectFormData>({
     name: project?.name || '',
     description: project?.description || '',
     methodology: project?.methodology || '',
@@ -92,7 +104,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ project, onSubmit, onCancel }
           <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
           <select
             value={formData.status}
-            onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
+            onChange={(e) => setFormData({ ...formData, status: e.target.value as ProjectFormData['status'] })}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
            <option value="planificacion">Planificación</option>

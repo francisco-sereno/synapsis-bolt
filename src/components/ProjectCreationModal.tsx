@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Target, Calendar, Building, FileText, Lightbulb, Users, BarChart3, MessageSquare, GitMerge } from 'lucide-react';
+import { X, Target } from 'lucide-react';
 import { useProjects } from '../hooks/useProjects';
 import { ResearchMethodology, MethodologyInfo } from '../types/research';
 
@@ -429,7 +429,7 @@ const ProjectCreationModal: React.FC<ProjectCreationModalProps> = ({ isOpen, onC
                   {statusOptions.map((status) => (
                     <div
                       key={status.value}
-                      onClick={() => setFormData({ ...formData, status: status.value as any })}
+                      onClick={() => setFormData({ ...formData, status: status.value as 'planificacion' | 'activo' | 'completado' | 'pausado' })}
                       className={`cursor-pointer border-2 rounded-lg p-4 transition-all ${
                         formData.status === status.value
                           ? `border-${status.color}-500 bg-${status.color}-50`

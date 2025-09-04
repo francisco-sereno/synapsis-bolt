@@ -1,20 +1,13 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { 
   Users, 
   ClipboardList, 
   Database, 
   TrendingUp, 
-  Calendar, 
-  CheckCircle, 
-  AlertCircle,
-  Clock,
   BarChart3,
-  FileText,
   Zap,
   Target,
-  Award,
-  Activity,
   Lightbulb
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
@@ -35,13 +28,7 @@ const Dashboard = () => {
   });
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (currentProject?.id) {
-      loadProjectStats();
-    }
-  }, [currentProject?.id]);
-
-  const loadProjectStats = async () => {
+  const loadProjectStats = useCallback(async () => {
     if (!currentProject?.id) return;
 
     try {
@@ -103,7 +90,13 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentProject?.id]);
+
+  useEffect(() => {
+    if (currentProject?.id) {
+      loadProjectStats();
+    }
+  }, [currentProject?.id, loadProjectStats]);
 
   if (!currentProject) {
     return (

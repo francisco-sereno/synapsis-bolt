@@ -1,3 +1,7 @@
+import {
+  ReportSectionData
+} from '../types/research';
+
 // AI Service - Core functions for research workflow
 export class AIService {
   private static instance: AIService;
@@ -57,7 +61,7 @@ export class AIService {
         hasObjectives ? 'Los objetivos están alineados con el problema de investigación' : null,
         hasJustification ? 'La justificación del estudio es sólida' : null,
         data.paradigm ? 'El posicionamiento paradigmático está definido' : null
-      ].filter(Boolean),
+      ].filter(Boolean) as string[],
       weaknesses: [
         problemLength < 100 ? 'El problema de investigación requiere mayor desarrollo y contextualización' : null,
         !hasMainQuestion ? 'La pregunta principal necesita ser formulada' : null,
@@ -65,7 +69,7 @@ export class AIService {
         !hasJustification ? 'La justificación teórica y práctica necesita desarrollo' : null,
         !data.paradigm ? 'Falta definir el posicionamiento paradigmático' : null,
         data.secondary_questions.length < 2 ? 'Se recomienda incluir más preguntas secundarias' : null
-      ].filter(Boolean),
+      ].filter(Boolean) as string[],
       recommendations: [
         'Desarrollar mayor profundidad en la contextualización del problema',
         'Asegurar que cada objetivo específico sea medible y alcanzable',
@@ -150,7 +154,7 @@ export class AIService {
   /**
    * Generación de Instrumento desde Documento
    */
-  async generateTemplateFromDocument(document: File): Promise<{
+  async generateTemplateFromDocument(): Promise<{
     questions: Array<{
       id: string;
       text: string;
@@ -200,7 +204,7 @@ export class AIService {
   /**
    * Generación de Instrumento desde Código
    */
-  async generateTemplateFromCode(code: string): Promise<{
+  async generateTemplateFromCode(): Promise<{
     questions: Array<{
       id: string;
       text: string;
@@ -238,13 +242,7 @@ export class AIService {
   /**
    * Validación de Instrumento por IA
    */
-  async validateInstrument(instrument: {
-    questions: Array<{
-      text: string;
-      type: string;
-      options?: string[];
-    }>;
-  }): Promise<{
+  async validateInstrument(): Promise<{
     overallScore: number;
     dimensions: {
       clarity: { score: number; feedback: string; suggestions: string[] };
@@ -292,13 +290,7 @@ export class AIService {
   /**
    * Validación Básica de Instrumento
    */
-  async basicInstrumentValidation(instrument: {
-    questions: Array<{
-      text: string;
-      type: string;
-      options?: string[];
-    }>;
-  }): Promise<{
+  async basicInstrumentValidation(): Promise<{
     overallScore: number;
     issues: Array<{
       questionIndex: number;
@@ -457,7 +449,7 @@ export class AIService {
   /**
    * Transcripción de Audio
    */
-  async transcribeAudio(audioFile: File): Promise<{
+  async transcribeAudio(): Promise<{
     transcript: string;
     confidence: number;
     speakers: Array<{
@@ -501,7 +493,7 @@ Participante 2: Eso es cierto, pero extraño mucho la interacción cara a cara c
   /**
    * Extracción de Texto de Documentos
    */
-  async extractTextFromDocument(file: File): Promise<{
+  async extractTextFromDocument(): Promise<{
     text: string;
     metadata: {
       pages: number;
@@ -761,10 +753,7 @@ Participante 2: Eso es cierto, pero extraño mucho la interacción cara a cara c
   /**
    * Identificación de Tendencias
    */
-  async identifyTrends(data: Array<{
-    timestamp: string;
-    values: Record<string, number>;
-  }>): Promise<{
+  async identifyTrends(): Promise<{
     trends: Array<{
       variable: string;
       direction: 'increasing' | 'decreasing' | 'stable';
@@ -854,11 +843,7 @@ Participante 2: Eso es cierto, pero extraño mucho la interacción cara a cara c
   /**
    * Resumen de Hallazgos
    */
-  async summarizeFindings(analysisResults: Array<{
-    type: string;
-    results: any;
-    significance: number;
-  }>): Promise<{
+  async summarizeFindings(): Promise<{
     executiveSummary: string;
     keyFindings: string[];
     implications: string[];
@@ -891,11 +876,7 @@ Participante 2: Eso es cierto, pero extraño mucho la interacción cara a cara c
   /**
    * Triangulación de Hallazgos
    */
-  async triangulateFindings(sources: Array<{
-    type: 'quantitative' | 'qualitative' | 'mixed';
-    findings: string[];
-    confidence: number;
-  }>): Promise<{
+  async triangulateFindings(): Promise<{
     convergences: Array<{
       theme: string;
       sources: string[];
@@ -948,12 +929,7 @@ Participante 2: Eso es cierto, pero extraño mucho la interacción cara a cara c
   /**
    * Triangulación de Instrumentos
    */
-  async triangulateInstruments(instruments: Array<{
-    name: string;
-    type: 'quantitative' | 'qualitative';
-    results: any;
-    construct: string;
-  }>): Promise<{
+  async triangulateInstruments(): Promise<{
     constructValidity: number;
     convergentEvidence: string[];
     discriminantEvidence: string[];
@@ -982,12 +958,7 @@ Participante 2: Eso es cierto, pero extraño mucho la interacción cara a cara c
   /**
    * Triangulación de Fuentes
    */
-  async triangulateSources(sources: Array<{
-    name: string;
-    type: 'primary' | 'secondary';
-    data: any;
-    credibility: number;
-  }>): Promise<{
+  async triangulateSources(): Promise<{
     sourceReliability: number;
     consistencyAnalysis: string[];
     conflictResolution: string[];
@@ -1020,11 +991,7 @@ Participante 2: Eso es cierto, pero extraño mucho la interacción cara a cara c
    */
   async generateReport(data: {
     title: string;
-    sections: Array<{
-      name: string;
-      content: any;
-      type: 'analysis' | 'findings' | 'methodology' | 'conclusions';
-    }>;
+    sections: ReportSectionData[];
     template: 'executive' | 'academic' | 'technical';
   }): Promise<{
     content: string;
@@ -1056,12 +1023,7 @@ Participante 2: Eso es cierto, pero extraño mucho la interacción cara a cara c
   /**
    * Revisión por Pares
    */
-  async peerReview(manuscript: {
-    title: string;
-    abstract: string;
-    content: string;
-    references: string[];
-  }): Promise<{
+  async peerReview(): Promise<{
     overallScore: number;
     sections: Array<{
       name: string;

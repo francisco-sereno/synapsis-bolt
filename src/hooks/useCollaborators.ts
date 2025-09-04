@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -7,7 +7,7 @@ interface Collaborator {
   project_id: string;
   user_id: string;
   role: 'admin' | 'editor' | 'collaborator' | 'viewer';
-  permissions: any;
+  permissions: Record<string, unknown>;
   invited_by: string;
   invited_at: string;
   joined_at: string | null;
@@ -28,16 +28,7 @@ export const useCollaborators = (projectId?: string) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (projectId && user) {
-      fetchCollaborators();
-    } else {
-      setCollaborators([]);
-      setLoading(false);
-    }
-  }, [projectId, user]);
-
-  const fetchCollaborators = async () => {
+  const fetchCollaborators = useCallback(async () => {
     if (!projectId) return;
 
     try {
@@ -65,7 +56,16 @@ export const useCollaborators = (projectId?: string) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [projectId]);
+
+  useEffect(() => {
+    if (projectId && user) {
+      fetchCollaborators();
+    } else {
+      setCollaborators([]);
+      setLoading(false);
+    }
+  }, [projectId, user, fetchCollaborators]);
 
   const inviteCollaborator = async (email: string, role: 'admin' | 'editor' | 'collaborator' | 'viewer') => {
     if (!projectId || !user?.id) {

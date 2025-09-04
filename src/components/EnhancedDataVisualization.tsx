@@ -1,22 +1,21 @@
 import React, { useState } from 'react';
 import { BarChart3, PieChart, TrendingUp, Activity, Download, Settings, RefreshCw, Maximize2, Lightbulb } from 'lucide-react';
 
+type BarDataPoint = { category: string; value: number; percentage: number };
+type HeatmapDataPoint = { x: string; y: string; value: number; significance: string };
+type LineDataPoint = { week: string; responses: number; completion: number };
+type ChartDataPoint = BarDataPoint | HeatmapDataPoint | LineDataPoint;
+
 interface ChartData {
   id: string;
   title: string;
   type: 'bar' | 'line' | 'pie' | 'scatter' | 'heatmap';
-  data: any[];
+  data: ChartDataPoint[];
   insights: string[];
 }
 
 const EnhancedDataVisualization = () => {
   const [activeChart, setActiveChart] = useState('satisfaction-overview');
-  const [chartSettings, setChartSettings] = useState({
-    showLabels: true,
-    showLegend: true,
-    colorScheme: 'default',
-    animation: true
-  });
 
   const charts: ChartData[] = [
     {
@@ -78,7 +77,7 @@ const EnhancedDataVisualization = () => {
         return (
           <div className="space-y-4">
             <div className="h-64 bg-gray-50 rounded-lg p-4 flex items-end justify-around">
-              {chart.data.map((item, index) => (
+              {(chart.data as BarDataPoint[]).map((item, index) => (
                 <div key={index} className="flex flex-col items-center space-y-2">
                   <div className="text-xs text-gray-600 font-medium">{item.value}</div>
                   <div 
@@ -98,7 +97,7 @@ const EnhancedDataVisualization = () => {
         return (
           <div className="space-y-4">
             <div className="grid grid-cols-4 gap-2 p-4 bg-gray-50 rounded-lg">
-              {chart.data.map((cell, index) => (
+              {(chart.data as HeatmapDataPoint[]).map((cell, index) => (
                 <div
                   key={index}
                   className={`p-3 rounded text-center text-white font-medium ${
@@ -124,7 +123,7 @@ const EnhancedDataVisualization = () => {
             <div className="h-64 bg-gray-50 rounded-lg p-4 relative">
               <svg className="w-full h-full">
                 <polyline
-                  points={chart.data.map((point, index) => 
+                  points={(chart.data as LineDataPoint[]).map((point, index) =>
                     `${(index / (chart.data.length - 1)) * 100},${100 - (point.responses / 35) * 100}`
                   ).join(' ')}
                   fill="none"
@@ -132,7 +131,7 @@ const EnhancedDataVisualization = () => {
                   strokeWidth="3"
                   className="drop-shadow-sm"
                 />
-                {chart.data.map((point, index) => (
+                {(chart.data as LineDataPoint[]).map((point, index) => (
                   <circle
                     key={index}
                     cx={`${(index / (chart.data.length - 1)) * 100}%`}
