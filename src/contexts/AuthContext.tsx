@@ -1,44 +1,7 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User, Session } from '@supabase/supabase-js';
+import React, { useEffect, useState, useCallback } from 'react';
+import { type User, type Session, type Subscription } from '@supabase/supabase-js';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
-
-interface Profile {
-  id: string;
-  email: string;
-  full_name: string | null;
-  institution: string | null;
-  department: string | null;
-  position: string | null;
-  orcid: string | null;
-  role: 'admin' | 'researcher' | 'collaborator';
-  avatar_url: string | null;
-  preferences: any;
-  created_at: string;
-  updated_at: string;
-}
-
-interface AuthContextType {
-  user: User | null;
-  profile: Profile | null;
-  session: Session | null;
-  loading: boolean;
-  signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signUp: (email: string, password: string, userData: Partial<Profile>) => Promise<{ error: any }>;
-  signOut: () => Promise<void>;
-  updateProfile: (updates: Partial<Profile>) => Promise<{ error: any }>;
-  isAdmin: boolean;
-  isSupabaseReady: boolean;
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
+import { AuthContext, type Profile } from './AuthContextDefinition';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -47,9 +10,60 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [isSupabaseReady, setIsSupabaseReady] = useState(false);
 
+  const fetchProfile = useCallback(async (userId: string) => {
+    try {
+      // Try to fetch the profile directly
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+      if (profileError) {
+        if (profileError.code === 'PGRST205') {
+          // Table doesn't exist, use demo mode silently
+          console.warn('Profiles table not found, using demo mode');
+          setLoading(false);
+          return null;
+        }
+
+        if (profileError.code === 'PGRST116') {
+          // Profile doesn't exist, create one
+          const { data: newProfile, error: createError } = await supabase
+            .from('profiles')
+            .insert({
+              id: userId,
+              full_name: user?.email?.split('@')[0] || 'Usuario',
+              email: user?.email || '',
+              role: 'researcher',
+              institution: null,
+              department: null,
+              avatar_url: null
+            })
+            .select()
+            .single();
+
+          if (createError) {
+            console.error('Error creating profile:', createError);
+            return null;
+          }
+          return newProfile;
+        }
+        console.error('Error fetching profile:', profileError);
+        return null;
+      }
+
+      return profileData;
+    } catch (error) {
+      console.error('Profile fetch error:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [user?.email]);
+
   useEffect(() => {
     let mounted = true;
-    let authSubscription: any = null;
+    let authSubscription: Subscription | null = null;
 
     const initAuth = async () => {
       try {
@@ -144,58 +158,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         authSubscription.unsubscribe();
       }
     };
-  }, []);
-
-  const fetchProfile = async (userId: string) => {
-    try {
-      // Try to fetch the profile directly
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
-
-      if (profileError) {
-        if (profileError.code === 'PGRST205') {
-          // Table doesn't exist, use demo mode silently
-          console.warn('Profiles table not found, using demo mode');
-          setLoading(false);
-          return null;
-        }
-        
-        if (profileError.code === 'PGRST116') {
-          // Profile doesn't exist, create one
-          const { data: newProfile, error: createError } = await supabase
-            .from('profiles')
-            .insert({
-              id: userId,
-              full_name: user?.email?.split('@')[0] || 'Usuario',
-              email: user?.email || '',
-              role: 'researcher',
-              institution: null,
-              department: null,
-              avatar_url: null
-            })
-            .select()
-            .single();
-
-          if (createError) {
-            console.error('Error creating profile:', createError);
-            return null;
-          }
-          return newProfile;
-        }
-        console.error('Error fetching profile:', profileError);
-        return null;
-      }
-
-      return profile;
-    } catch (error) {
-      console.error('Profile fetch error:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [fetchProfile]);
 
   const signIn = async (email: string, password: string) => {
     if (!isSupabaseReady) {
@@ -208,7 +171,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         password,
       });
       return { error };
-    } catch (error) {
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error('An unknown error occurred');
       return { error };
     }
   };
@@ -253,19 +217,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           console.warn('Profiles table not found, using demo mode');
           setLoading(false);
           return null;
-        }
-        
-        if (profileError && profileError.code === 'PGRST205') {
-          // Table doesn't exist, use demo mode
-          console.log('Profiles table not found, using demo mode');
-          return null;
         } else if (profileError) {
           console.error('Error creating profile:', profileError);
         }
       }
 
       return { error: null };
-    } catch (error) {
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error('An unknown error occurred');
       return { error };
     }
   };
@@ -313,7 +272,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       return { error };
-    } catch (error) {
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error('An unknown error occurred');
       return { error };
     }
   };

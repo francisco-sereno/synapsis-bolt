@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Filter, Calendar, User, Tag, FileText, BarChart3, Brain, Download } from 'lucide-react';
+import { Search, FileText, BarChart3, Brain, Download } from 'lucide-react';
 
 interface SearchResult {
   id: string;

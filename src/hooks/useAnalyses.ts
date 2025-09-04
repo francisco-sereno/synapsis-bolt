@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -8,8 +8,8 @@ interface Analysis {
   name: string;
   type: string;
   dataset_id: string | null;
-  parameters: any;
-  results: any;
+  parameters: Record<string, unknown>;
+  results: Record<string, unknown>;
   interpretation: string | null;
   status: 'running' | 'completed' | 'failed';
   rating: number | null;
@@ -25,16 +25,7 @@ export const useAnalyses = (projectId?: string) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (projectId && user) {
-      fetchAnalyses();
-    } else {
-      setAnalyses([]);
-      setLoading(false);
-    }
-  }, [projectId, user]);
-
-  const fetchAnalyses = async () => {
+  const fetchAnalyses = useCallback(async () => {
     if (!projectId) return;
 
     try {
@@ -54,14 +45,23 @@ export const useAnalyses = (projectId?: string) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [projectId]);
+
+  useEffect(() => {
+    if (projectId && user) {
+      fetchAnalyses();
+    } else {
+      setAnalyses([]);
+      setLoading(false);
+    }
+  }, [projectId, user, fetchAnalyses]);
 
   const createAnalysis = async (analysisData: {
     name: string;
     type: string;
     dataset_id?: string;
-    parameters?: any;
-    results?: any;
+    parameters?: Record<string, unknown>;
+    results?: Record<string, unknown>;
     interpretation?: string;
   }) => {
     if (!projectId || !user?.id) {

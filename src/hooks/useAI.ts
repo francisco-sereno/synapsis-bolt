@@ -1,5 +1,11 @@
 import { useState, useCallback } from 'react';
 import { aiService } from '../services/aiService';
+import {
+  AnalysisResultToSummarize,
+  InstrumentToTriangulate,
+  SourceToTriangulate,
+  ReportSectionData
+} from '../types/research';
 
 // Custom hook for AI service integration
 export const useAI = () => {
@@ -133,11 +139,7 @@ export const useAI = () => {
     return executeAIFunction(() => aiService.summarizeText(text, maxLength));
   }, [executeAIFunction]);
 
-  const summarizeFindings = useCallback(async (analysisResults: Array<{
-    type: string;
-    results: any;
-    significance: number;
-  }>) => {
+  const summarizeFindings = useCallback(async (analysisResults: AnalysisResultToSummarize[]) => {
     return executeAIFunction(() => aiService.summarizeFindings(analysisResults));
   }, [executeAIFunction]);
 
@@ -149,31 +151,17 @@ export const useAI = () => {
     return executeAIFunction(() => aiService.triangulateFindings(sources));
   }, [executeAIFunction]);
 
-  const triangulateInstruments = useCallback(async (instruments: Array<{
-    name: string;
-    type: 'quantitative' | 'qualitative';
-    results: any;
-    construct: string;
-  }>) => {
+  const triangulateInstruments = useCallback(async (instruments: InstrumentToTriangulate[]) => {
     return executeAIFunction(() => aiService.triangulateInstruments(instruments));
   }, [executeAIFunction]);
 
-  const triangulateSources = useCallback(async (sources: Array<{
-    name: string;
-    type: 'primary' | 'secondary';
-    data: any;
-    credibility: number;
-  }>) => {
+  const triangulateSources = useCallback(async (sources: SourceToTriangulate[]) => {
     return executeAIFunction(() => aiService.triangulateSources(sources));
   }, [executeAIFunction]);
 
   const generateReport = useCallback(async (data: {
     title: string;
-    sections: Array<{
-      name: string;
-      content: any;
-      type: 'analysis' | 'findings' | 'methodology' | 'conclusions';
-    }>;
+    sections: ReportSectionData[];
     template: 'executive' | 'academic' | 'technical';
   }) => {
     return executeAIFunction(() => aiService.generateReport(data));

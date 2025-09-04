@@ -1,3 +1,5 @@
+import type { Json } from '@supabase/supabase-js';
+
 export interface Project {
   id: string;
   name: string;
@@ -11,10 +13,10 @@ export interface Project {
   status: 'planificacion' | 'activo' | 'completado' | 'pausado';
   ethics_approval: string | null;
   visibility: 'private' | 'institutional' | 'public';
-  settings: any;
+  settings: Json;
   created_at: string;
   updated_at: string;
-  project_collaborators?: any[];
+  project_collaborators?: Json[];
 }
 
 export interface Profile {
@@ -27,7 +29,7 @@ export interface Profile {
   orcid: string | null;
   role: 'admin' | 'researcher' | 'collaborator';
   avatar_url: string | null;
-  preferences: any;
+  preferences: Json;
   created_at: string;
   updated_at: string;
 }
@@ -38,9 +40,9 @@ export interface Instrument {
   name: string;
   description: string | null;
   type: 'survey' | 'interview' | 'observation' | 'scale' | 'test';
-  questions: any;
-  validation_data: any;
-  metadata: any;
+  questions: Json;
+  validation_data: Json;
+  metadata: Json;
   status: 'draft' | 'validated' | 'active' | 'completed' | 'archived';
   created_by: string;
   created_at: string;
@@ -52,7 +54,7 @@ export interface Collaborator {
   project_id: string;
   user_id: string;
   role: 'admin' | 'editor' | 'collaborator' | 'viewer';
-  permissions: any;
+  permissions: Json;
   invited_by: string;
   invited_at: string;
   joined_at: string | null;
@@ -72,8 +74,8 @@ export interface Analysis {
   name: string;
   type: string;
   dataset_id: string | null;
-  parameters: any;
-  results: any;
+  parameters: Json;
+  results: Json;
   interpretation: string | null;
   status: 'running' | 'completed' | 'failed';
   rating: number | null;
@@ -89,8 +91,8 @@ export interface Template {
   description: string | null;
   category: string;
   type: 'survey' | 'interview' | 'observation' | 'scale' | 'test';
-  questions: any;
-  metadata: any;
+  questions: Json;
+  metadata: Json;
   usage_count: number;
   is_public: boolean;
   created_by: string;

@@ -1,11 +1,21 @@
 import React, { useState } from 'react';
-import { FileText, Upload, Download, Lightbulb, Key, BookOpen, Tag } from 'lucide-react';
+import { FileText, Download, Lightbulb, Key, BookOpen } from 'lucide-react';
 import { useAI } from '../hooks/useAI';
+
+interface SummaryResults {
+  summary: string;
+  wordCount: {
+    original: number;
+    summary: number;
+  };
+  compressionRatio: number;
+  keyPoints: string[];
+}
 
 const DocumentSummarizer = () => {
   const { summarizeText, extractTextFromDocument, loading } = useAI();
   const [documentText, setDocumentText] = useState('');
-  const [summaryResults, setSummaryResults] = useState<any>(null);
+  const [summaryResults, setSummaryResults] = useState<SummaryResults | null>(null);
   const [maxLength, setMaxLength] = useState(200);
 
   const handleTextSummarization = async () => {
@@ -147,7 +157,7 @@ const DocumentSummarizer = () => {
                   Ideas Clave
                 </h2>
                 <div className="space-y-3">
-                  {summaryResults.keyPoints.map((point: string, index: number) => (
+                  {summaryResults.keyPoints.map((point, index) => (
                     <div key={index} className="flex items-start space-x-3 p-3 bg-green-50 border border-green-200 rounded-lg">
                       <div className="w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
                         {index + 1}

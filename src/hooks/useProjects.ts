@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -15,7 +15,7 @@ interface Project {
   status: 'planificacion' | 'activo' | 'completado' | 'pausado';
   ethics_approval: string | null;
   visibility: 'private' | 'institutional' | 'public';
-  settings: any;
+  settings: Record<string, unknown>;
   created_at: string;
   updated_at: string;
 }
@@ -27,18 +27,7 @@ export const useProjects = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!user) {
-      setProjects([]);
-      setCurrentProject(null);
-      setLoading(false);
-      return;
-    }
-
-    fetchProjects();
-  }, [user]);
-
-  const fetchProjects = async () => {
+  const fetchProjects = useCallback(async () => {
     if (!user) return;
     
     try {
@@ -58,7 +47,18 @@ export const useProjects = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) {
+      setProjects([]);
+      setCurrentProject(null);
+      setLoading(false);
+      return;
+    }
+
+    fetchProjects();
+  }, [user, fetchProjects]);
 
   const createProject = async (projectData: {
     name: string;

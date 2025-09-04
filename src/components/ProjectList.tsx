@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useProjects } from '../hooks/useProjects';
 import { useAuth } from '../contexts/AuthContext';
-import { Target, Plus, Calendar, Users, MoreVertical, Edit, Trash2, Eye } from 'lucide-react';
+import { Target, Plus, Calendar, MoreVertical, Trash2, Eye } from 'lucide-react';
 import ProjectCreationModal from './ProjectCreationModal';
 
 const ProjectList = () => {
   const { projects, currentProject, setCurrentProject, deleteProject } = useProjects();
-  const { profile } = useAuth();
+  useAuth();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState<string | null>(null);
 

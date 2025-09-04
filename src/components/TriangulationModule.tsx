@@ -1,10 +1,26 @@
 import React, { useState } from 'react';
-import { GitMerge, Layers, Lightbulb, BarChart3, MessageSquare, FileText, Zap, CheckCircle } from 'lucide-react';
+import { GitMerge, Layers, Lightbulb, BarChart3, FileText, Zap, CheckCircle } from 'lucide-react';
+
+interface TriangulationResult {
+  convergences: {
+    theme: string;
+    sources: string[];
+    strength: string;
+    evidence: string;
+  }[];
+  divergences: {
+    theme: string;
+    sources: string[];
+    explanation: string;
+  }[];
+  metaInferences: string[];
+  recommendations: string[];
+}
 
 const TriangulationModule = () => {
   const [activeTab, setActiveTab] = useState('setup');
-  const [selectedSources, setSelectedSources] = useState([]);
-  const [triangulationResults, setTriangulationResults] = useState(null);
+  const [selectedSources, setSelectedSources] = useState<number[]>([]);
+  const [triangulationResults, setTriangulationResults] = useState<TriangulationResult | null>(null);
   const [isTriangulating, setIsTriangulating] = useState(false);
 
   const dataSources = [
@@ -123,7 +139,7 @@ const TriangulationModule = () => {
     }, 3000);
   };
 
-  const toggleSource = (sourceId) => {
+  const toggleSource = (sourceId: number) => {
     setSelectedSources(prev => 
       prev.includes(sourceId) 
         ? prev.filter(id => id !== sourceId)

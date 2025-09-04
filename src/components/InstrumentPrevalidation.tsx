@@ -3,11 +3,9 @@ import {
   Shield, 
   Brain, 
   Users, 
-  FileText, 
   CheckCircle, 
   AlertTriangle, 
   Lightbulb,
-  Clock,
   Target,
   MessageSquare,
   BarChart3,
@@ -15,6 +13,102 @@ import {
   Settings
 } from 'lucide-react';
 import { usePrevalidation } from '../hooks/usePrevalidation';
+
+// Types for validation results
+interface CognitiveInterviewResult {
+  responses: {
+    questionNumber: number;
+    interpretation: string;
+    retrievalProcess: string;
+    judgmentAndResponse: string;
+    difficulties: string;
+  }[];
+  overallExperience: {
+    length: string;
+    flow: string;
+    interest: string;
+    recommendations: string[];
+  };
+}
+
+interface TechnicalReviewResult {
+  detailedReview: {
+    itemNumber: number;
+    problemDetected: string;
+    improvementSuggestion: string;
+  }[];
+  overallScore: number;
+  generalStrengths: string[];
+  finalRecommendations: string[];
+}
+
+interface DepthAnalysisResult {
+  depthPotential: {
+    score: number;
+    analysis: string;
+    suggestions: string[];
+  };
+  opennessNeutrality: {
+    score: number;
+    closedQuestions: {
+      original: string;
+      reformulated: string;
+    }[];
+  };
+  flowTransitions: {
+    score: number;
+    feedback: string;
+    improvements: string[];
+  };
+  probeQuality: {
+    score: number;
+    suggestedProbes: string[];
+  };
+}
+
+interface ReflexivityReviewResult {
+  identifiedAssumptions: string[];
+  loadedQuestions: {
+    original: string;
+    bias: string;
+    neutral: string;
+  }[];
+  framingIssues: {
+    issue: string;
+    limitation: string;
+    suggestion: string;
+  }[];
+}
+
+interface ExpertPanelResult {
+  panelSynthesis: {
+    cviScore: number;
+    agreements: string[];
+    disagreements: string[];
+    priorityChanges: string[];
+  };
+  judge1_thematic: {
+    generalComments: string;
+    sufficiency: string;
+  };
+  judge2_methodological: {
+    generalComments: string;
+    technicalQuality: string;
+  };
+  judge3_contextual: {
+    generalComments: string;
+    contextualAdequacy: string;
+  };
+}
+
+type ValidationResult =
+  | CognitiveInterviewResult
+  | TechnicalReviewResult
+  | DepthAnalysisResult
+  | ReflexivityReviewResult
+  | ExpertPanelResult
+  | null;
+
 
 const InstrumentPrevalidation = () => {
   const {
@@ -36,7 +130,7 @@ const InstrumentPrevalidation = () => {
     phenomenon: '',
     studyContext: ''
   });
-  const [results, setResults] = useState<any>(null);
+  const [results, setResults] = useState<ValidationResult>(null);
   const [activeValidation, setActiveValidation] = useState<string | null>(null);
 
   const quantitativeValidations = [
@@ -164,7 +258,7 @@ const InstrumentPrevalidation = () => {
   const renderQuantitativeResults = () => {
     if (!results) return null;
 
-    if (results.responses) {
+    if ('responses' in results) {
       // Cognitive Interview Results
       return (
         <div className="space-y-6">
@@ -173,7 +267,7 @@ const InstrumentPrevalidation = () => {
             <p className="text-sm text-blue-700">Análisis del protocolo "Think Aloud" simulado</p>
           </div>
 
-          {results.responses.map((response: any, index: number) => (
+          {(results as CognitiveInterviewResult).responses.map((response, index) => (
             <div key={index} className="bg-white border border-gray-200 rounded-lg p-6">
               <h4 className="font-semibold text-gray-900 mb-4">Pregunta #{response.questionNumber}</h4>
               
@@ -208,22 +302,22 @@ const InstrumentPrevalidation = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
               <div>
                 <span className="font-medium text-green-800">Longitud:</span>
-                <p className="text-green-700 mt-1">{results.overallExperience.length}</p>
+                <p className="text-green-700 mt-1">{(results as CognitiveInterviewResult).overallExperience.length}</p>
               </div>
               <div>
                 <span className="font-medium text-green-800">Flujo:</span>
-                <p className="text-green-700 mt-1">{results.overallExperience.flow}</p>
+                <p className="text-green-700 mt-1">{(results as CognitiveInterviewResult).overallExperience.flow}</p>
               </div>
               <div>
                 <span className="font-medium text-green-800">Interés:</span>
-                <p className="text-green-700 mt-1">{results.overallExperience.interest}</p>
+                <p className="text-green-700 mt-1">{(results as CognitiveInterviewResult).overallExperience.interest}</p>
               </div>
             </div>
             
             <div className="mt-4">
               <h5 className="font-medium text-green-800 mb-2">Recomendaciones:</h5>
               <ul className="space-y-1">
-                {results.overallExperience.recommendations.map((rec: string, index: number) => (
+                {(results as CognitiveInterviewResult).overallExperience.recommendations.map((rec, index) => (
                   <li key={index} className="text-sm text-green-700 flex items-start">
                     <span className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 mr-2"></span>
                     {rec}
@@ -236,7 +330,7 @@ const InstrumentPrevalidation = () => {
       );
     }
 
-    if (results.detailedReview) {
+    if ('detailedReview' in results) {
       // Technical Review Results
       return (
         <div className="space-y-6">
@@ -244,14 +338,14 @@ const InstrumentPrevalidation = () => {
             <h3 className="font-semibold text-green-900 mb-2">Revisión Técnica Metodológica</h3>
             <div className="flex items-center space-x-2">
               <span className="text-sm text-green-700">Puntuación General:</span>
-              <span className="font-bold text-green-800">{results.overallScore}/10</span>
+              <span className="font-bold text-green-800">{(results as TechnicalReviewResult).overallScore}/10</span>
             </div>
           </div>
 
           <div className="bg-white border border-gray-200 rounded-lg p-6">
             <h4 className="font-semibold text-gray-900 mb-4">Fortalezas del Instrumento</h4>
             <div className="space-y-2">
-              {results.generalStrengths.map((strength: string, index: number) => (
+              {(results as TechnicalReviewResult).generalStrengths.map((strength, index) => (
                 <div key={index} className="flex items-start space-x-2">
                   <CheckCircle className="w-4 h-4 text-green-600 mt-0.5" />
                   <span className="text-sm text-gray-700">{strength}</span>
@@ -274,7 +368,7 @@ const InstrumentPrevalidation = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {results.detailedReview.map((item: any, index: number) => (
+                  {(results as TechnicalReviewResult).detailedReview.map((item, index) => (
                     <tr key={index} className="hover:bg-gray-50">
                       <td className="px-4 py-3 text-sm font-medium text-gray-900">{item.itemNumber}</td>
                       <td className="px-4 py-3 text-sm text-red-600">{item.problemDetected}</td>
@@ -289,7 +383,7 @@ const InstrumentPrevalidation = () => {
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-6">
             <h4 className="font-semibold text-amber-900 mb-3">Recomendaciones Finales</h4>
             <div className="space-y-2">
-              {results.finalRecommendations.map((rec: string, index: number) => (
+              {(results as TechnicalReviewResult).finalRecommendations.map((rec, index) => (
                 <div key={index} className="flex items-start space-x-2">
                   <Lightbulb className="w-4 h-4 text-amber-600 mt-0.5" />
                   <span className="text-sm text-amber-800">{rec}</span>
@@ -301,13 +395,17 @@ const InstrumentPrevalidation = () => {
       );
     }
 
+    if ('panelSynthesis' in results) {
+      return renderExpertPanelResults();
+    }
+
     return null;
   };
 
   const renderQualitativeResults = () => {
     if (!results) return null;
 
-    if (results.depthPotential) {
+    if ('depthPotential' in results) {
       // Depth Analysis Results
       return (
         <div className="space-y-6">
@@ -325,18 +423,18 @@ const InstrumentPrevalidation = () => {
               <div className="mb-3">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-gray-700">Puntuación</span>
-                  <span className="font-bold text-blue-600">{results.depthPotential.score}/10</span>
+                  <span className="font-bold text-blue-600">{(results as DepthAnalysisResult).depthPotential.score}/10</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
                   <div 
                     className="bg-blue-600 h-2 rounded-full"
-                    style={{ width: `${(results.depthPotential.score / 10) * 100}%` }}
+                    style={{ width: `${((results as DepthAnalysisResult).depthPotential.score / 10) * 100}%` }}
                   />
                 </div>
               </div>
-              <p className="text-sm text-gray-600 mb-3">{results.depthPotential.analysis}</p>
+              <p className="text-sm text-gray-600 mb-3">{(results as DepthAnalysisResult).depthPotential.analysis}</p>
               <div className="space-y-1">
-                {results.depthPotential.suggestions.map((suggestion: string, index: number) => (
+                {(results as DepthAnalysisResult).depthPotential.suggestions.map((suggestion, index) => (
                   <div key={index} className="flex items-start space-x-2">
                     <Lightbulb className="w-3 h-3 text-blue-600 mt-1" />
                     <span className="text-xs text-blue-700">{suggestion}</span>
@@ -353,19 +451,19 @@ const InstrumentPrevalidation = () => {
               <div className="mb-3">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-gray-700">Puntuación</span>
-                  <span className="font-bold text-green-600">{results.opennessNeutrality.score}/10</span>
+                  <span className="font-bold text-green-600">{(results as DepthAnalysisResult).opennessNeutrality.score}/10</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
                   <div 
                     className="bg-green-600 h-2 rounded-full"
-                    style={{ width: `${(results.opennessNeutrality.score / 10) * 100}%` }}
+                    style={{ width: `${((results as DepthAnalysisResult).opennessNeutrality.score / 10) * 100}%` }}
                   />
                 </div>
               </div>
               
               <h5 className="font-medium text-gray-700 mb-2">Preguntas a Reformular:</h5>
               <div className="space-y-2">
-                {results.opennessNeutrality.closedQuestions.map((question: any, index: number) => (
+                {(results as DepthAnalysisResult).opennessNeutrality.closedQuestions.map((question, index) => (
                   <div key={index} className="bg-gray-50 p-3 rounded">
                     <p className="text-xs text-red-600 mb-1">Original: {question.original}</p>
                     <p className="text-xs text-green-600">Sugerida: {question.reformulated}</p>
@@ -381,12 +479,12 @@ const InstrumentPrevalidation = () => {
               <div className="mb-3">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-gray-700">Puntuación</span>
-                  <span className="font-bold text-purple-600">{results.flowTransitions.score}/10</span>
+                  <span className="font-bold text-purple-600">{(results as DepthAnalysisResult).flowTransitions.score}/10</span>
                 </div>
               </div>
-              <p className="text-sm text-gray-600 mb-3">{results.flowTransitions.feedback}</p>
+              <p className="text-sm text-gray-600 mb-3">{(results as DepthAnalysisResult).flowTransitions.feedback}</p>
               <div className="space-y-1">
-                {results.flowTransitions.improvements.map((improvement: string, index: number) => (
+                {(results as DepthAnalysisResult).flowTransitions.improvements.map((improvement, index) => (
                   <div key={index} className="flex items-start space-x-2">
                     <AlertTriangle className="w-3 h-3 text-orange-600 mt-1" />
                     <span className="text-xs text-orange-700">{improvement}</span>
@@ -400,7 +498,7 @@ const InstrumentPrevalidation = () => {
               <div className="mb-3">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-gray-700">Puntuación</span>
-                  <span className="font-bold text-indigo-600">{results.probeQuality.score}/10</span>
+                  <span className="font-bold text-indigo-600">{(results as DepthAnalysisResult).probeQuality.score}/10</span>
                 </div>
               </div>
               
@@ -408,7 +506,7 @@ const InstrumentPrevalidation = () => {
                 <div>
                   <h5 className="font-medium text-gray-700 mb-2">Sondas Sugeridas:</h5>
                   <div className="space-y-1">
-                    {results.probeQuality.suggestedProbes.map((probe: string, index: number) => (
+                    {(results as DepthAnalysisResult).probeQuality.suggestedProbes.map((probe, index) => (
                       <div key={index} className="text-xs text-indigo-700 bg-indigo-50 p-2 rounded">
                         "{probe}"
                       </div>
@@ -422,7 +520,7 @@ const InstrumentPrevalidation = () => {
       );
     }
 
-    if (results.identifiedAssumptions) {
+    if ('identifiedAssumptions' in results) {
       // Reflexivity Review Results
       return (
         <div className="space-y-6">
@@ -434,7 +532,7 @@ const InstrumentPrevalidation = () => {
           <div className="bg-white border border-gray-200 rounded-lg p-6">
             <h4 className="font-semibold text-gray-900 mb-4">Supuestos Identificados</h4>
             <div className="space-y-2">
-              {results.identifiedAssumptions.map((assumption: string, index: number) => (
+              {(results as ReflexivityReviewResult).identifiedAssumptions.map((assumption, index) => (
                 <div key={index} className="flex items-start space-x-2">
                   <AlertTriangle className="w-4 h-4 text-orange-600 mt-0.5" />
                   <span className="text-sm text-orange-800">{assumption}</span>
@@ -446,7 +544,7 @@ const InstrumentPrevalidation = () => {
           <div className="bg-white border border-gray-200 rounded-lg p-6">
             <h4 className="font-semibold text-gray-900 mb-4">Preguntas Cargadas Detectadas</h4>
             <div className="space-y-4">
-              {results.loadedQuestions.map((question: any, index: number) => (
+              {(results as ReflexivityReviewResult).loadedQuestions.map((question, index) => (
                 <div key={index} className="border border-red-200 rounded-lg p-4 bg-red-50">
                   <div className="mb-2">
                     <span className="text-xs font-medium text-red-800">Original:</span>
@@ -468,7 +566,7 @@ const InstrumentPrevalidation = () => {
           <div className="bg-white border border-gray-200 rounded-lg p-6">
             <h4 className="font-semibold text-gray-900 mb-4">Problemas de Encuadre</h4>
             <div className="space-y-4">
-              {results.framingIssues.map((issue: any, index: number) => (
+              {(results as ReflexivityReviewResult).framingIssues.map((issue, index) => (
                 <div key={index} className="border border-yellow-200 rounded-lg p-4 bg-yellow-50">
                   <h5 className="font-medium text-yellow-900 mb-1">{issue.issue}</h5>
                   <p className="text-sm text-yellow-800 mb-2">Limitación: {issue.limitation}</p>
@@ -485,7 +583,7 @@ const InstrumentPrevalidation = () => {
   };
 
   const renderExpertPanelResults = () => {
-    if (!results || !results.panelSynthesis) return null;
+    if (!results || !('panelSynthesis' in results)) return null;
 
     return (
       <div className="space-y-6">
@@ -551,7 +649,7 @@ const InstrumentPrevalidation = () => {
             <div>
               <h5 className="font-medium text-green-800 mb-2">Acuerdos Principales</h5>
               <div className="space-y-1">
-                {results.panelSynthesis.agreements.map((agreement: string, index: number) => (
+                {results.panelSynthesis.agreements.map((agreement, index) => (
                   <div key={index} className="flex items-start space-x-2">
                     <CheckCircle className="w-3 h-3 text-green-600 mt-1" />
                     <span className="text-sm text-green-700">{agreement}</span>
@@ -563,7 +661,7 @@ const InstrumentPrevalidation = () => {
             <div>
               <h5 className="font-medium text-red-800 mb-2">Desacuerdos y Divergencias</h5>
               <div className="space-y-1">
-                {results.panelSynthesis.disagreements.map((disagreement: string, index: number) => (
+                {results.panelSynthesis.disagreements.map((disagreement, index) => (
                   <div key={index} className="flex items-start space-x-2">
                     <AlertTriangle className="w-3 h-3 text-red-600 mt-1" />
                     <span className="text-sm text-red-700">{disagreement}</span>
@@ -576,7 +674,7 @@ const InstrumentPrevalidation = () => {
           <div className="mt-6 bg-amber-50 border border-amber-200 rounded-lg p-4">
             <h5 className="font-medium text-amber-900 mb-2">Cambios Prioritarios</h5>
             <div className="space-y-1">
-              {results.panelSynthesis.priorityChanges.map((change: string, index: number) => (
+              {results.panelSynthesis.priorityChanges.map((change, index) => (
                 <div key={index} className="flex items-start space-x-2">
                   <span className="w-5 h-5 bg-amber-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
                     {index + 1}
@@ -791,7 +889,6 @@ const InstrumentPrevalidation = () => {
               <div className="p-6">
                 {activeTab === 'quantitative' && renderQuantitativeResults()}
                 {activeTab === 'qualitative' && renderQualitativeResults()}
-                {results.panelSynthesis && renderExpertPanelResults()}
               </div>
             </div>
           )}

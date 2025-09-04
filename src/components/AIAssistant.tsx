@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Bot, Send, Lightbulb, BarChart3, FileText, Users, Mic, MicOff, Volume2, Copy, ThumbsUp, ThumbsDown, CheckCircle, Calculator, PenTool } from 'lucide-react';
+import { Bot, Send, Lightbulb, BarChart3, FileText, Users, Mic, MicOff, Copy, ThumbsUp, ThumbsDown, CheckCircle, Calculator, PenTool } from 'lucide-react';
 
 const AIAssistant = () => {
   const [messages, setMessages] = useState([
